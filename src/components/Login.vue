@@ -45,7 +45,7 @@ export default {
         // 验证密码是否合法
         password: [
           { required: true, message: '请输入用户密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度请在6到15个字符之间', trigger: 'blur' }
+          { min: 5, max: 15, message: '长度请在5到15个字符之间', trigger: 'blur' }
         ]
       }
     }
@@ -62,15 +62,19 @@ export default {
         if (!valid) {
           return false
         } else {
-          const { data: res } = await this.$http.post('login', this.loginForm)
-          if (res.meta.status !== 200) return this.$message.error('登陆失败')
-          this.$message.success('登陆成功')
-          // 登陆成功后将token缓存到sessionStorage
-          // 项目中出现登陆之外的其他API接口，必须在登录之后才能访问
-          // token 只应在当前网站打开期间生效，所以将 token 保存到 sessionStorage 中
-          window.sessionStorage.setItem('token', res.data.token)
-          // 通过编程式导航跳转到后台主页，路由地址是 /home
-          this.$router.push('/home')
+          const { data: res } = await this.$http.post('/admin/login', this.loginForm)
+          if (res.success) {
+            // 登陆成功后将token缓存到sessionStorage
+            // 项目中出现登陆之外的其他API接口，必须在登录之后才能访问
+            // token 只应在当前网站打开期间生效，所以将 token 保存到 sessionStorage 中
+            window.sessionStorage.setItem('token', res.token)
+            // 通过编程式导航跳转到后台主页，路由地址是 /home
+            this.$router.push('/home')
+            return res.message
+          } else {
+            alert('账号或密码错误，请重新登录')
+            return res.message
+          }
         }
       })
     }
