@@ -12,33 +12,23 @@
       <!-- 搜索与添加区域 -->
       <el-row :gutter="20">
         <el-col :span="10">
-          <el-input placeholder="请输入内容" clearable>
+          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @change="getProvinceList()">
             <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </el-col>
       </el-row>
 
       <!-- 省份列表区域 -->
-      <el-table :data="userlist" border stripe>
+      <el-table :data="provincelist" border stripe>
         <el-table-column type="index"></el-table-column>
-        <el-table-column label="姓名" prop="true_name" width="70px"></el-table-column>
-        <el-table-column label="账号/手机号" prop="username" width="100px"></el-table-column>
-        <el-table-column label="密码" prop="password" width="80px"></el-table-column>
-        <el-table-column label="管辖区域" prop="city"></el-table-column>
-        <el-table-column label="创建时间" prop="create_time" width="150px"></el-table-column>
-        <el-table-column label="操作" width="120px">
-          <template slot-scope="scope">
-            <!-- 修改按钮 -->
-            <el-tooltip effect="dark" content="修改" placement="top" :enterable="false">
-              <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
-            </el-tooltip>
-            <!-- 删除按钮 -->
-            <el-tooltip effect="dark" content="删除" placement="top" :enterable="false">
-              <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id, scope.row.city)"></el-button>
-            </el-tooltip>
-          </template>
-        </el-table-column>
+        <el-table-column label="名称" prop="name"></el-table-column>
+        <el-table-column label="创建时间" prop="create_time"></el-table-column>
       </el-table>
+
+      <!-- 分页区域 -->
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      :current-page="queryInfo.pageNum" :page-sizes="[8, 10, 15, 20]" :page-size="queryInfo.pageSize"
+      layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
 
     </el-card>
   </div>
@@ -46,10 +36,49 @@
 
 <script>
 export default {
-
+  data () {
+    return {
+      // 获取省份列表的参数对象
+      queryInfo: {
+        query: '',
+        pageNum: 1,
+        pageSize: 8
+      },
+      // 省份列表数据存储对象
+      provincelist: [],
+      // 数据总条数
+      total: 0
+    }
+  },
+  created () {
+    this.getProvinceList()
+  },
+  methods: {
+    // 获取省份列表
+    async getProvinceList () {
+      const { data: res } = await this.$http.get('city/getProvinces', {
+        params: this.queryInfo
+      })
+      if (res.meta.status === 200) {
+        this.provincelist = res.data.provinces
+        this.total = res.data.total
+      } else {
+        return this.$mesaage.error('获取省份列表信息失败')
+      }
+    },
+    // 监听 pageSize 改变的事件
+    handleSizeChange (newSize) {
+      this.queryInfo.pageSize = newSize
+      this.getProvinceList()
+    },
+    // 监听页码的值改变的事件
+    handleCurrentChange (newPage) {
+      this.queryInfo.pageNum = newPage
+      this.getProvinceList()
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
-
 </style>

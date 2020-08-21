@@ -12,7 +12,7 @@
       <!-- 搜索与添加区域 -->
       <el-row :gutter="20">
         <el-col :span="10">
-          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @change="getUserList">
+          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @change="getUserList()">
             <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
           </el-input>
         </el-col>
@@ -120,7 +120,7 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
-      // 用户列表数据
+      // 用户列表数据存储对象
       userlist: [],
       // 总页数
       totalPage: 0,
@@ -192,7 +192,6 @@ export default {
         this.totalPage = res.data.totalPage
         this.total = res.data.total
       }
-    //   console.log(res)
     },
     // 监听 pageSize 改变的事件
     handleSizeChange (newSize) {
