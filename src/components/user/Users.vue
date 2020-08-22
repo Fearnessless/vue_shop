@@ -122,8 +122,6 @@ export default {
       },
       // 用户列表数据存储对象
       userlist: [],
-      // 总页数
-      totalPage: 0,
       // 数据总条数
       total: 0,
       // 控制添加用户对话框的显示与隐藏
@@ -189,7 +187,6 @@ export default {
         return this.$message.error('获取供货仓用户列表失败')
       } else {
         this.userlist = res.data.users
-        this.totalPage = res.data.totalPage
         this.total = res.data.total
       }
     },
@@ -262,7 +259,6 @@ export default {
     // 根据 id 删除对应的用户信息
     async removeUserById (id, city) {
       // 判断是否已绑定市区，绑定市区不可删除，否则才可以进行删除
-      console.log(city)
       if (city === '') {
         // 弹框询问是否要进行删除操作
         const confirmRes = await this.$confirm('此操作将永久删除该供货仓信息, 是否继续?', '警告', {
