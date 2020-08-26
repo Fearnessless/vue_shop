@@ -6,11 +6,8 @@ import Welcome from './components/Welcome.vue'
 import Province from './components/city/Province.vue'
 import City from './components/city/City.vue'
 import Users from './components/user/Users.vue'
-import UserAdd from './components/user/UserAdd.vue'
 import Orders from './components/order/Orders.vue'
-import OrderAdd from './components/order/OrderAdd.vue'
 import Finance from './components/finance/Finance.vue'
-import FinanceAdd from './components/finance/FinanceAdd.vue'
 
 Vue.use(Router)
 
@@ -28,11 +25,8 @@ const router = new Router({
         { path: '/province', component: Province },
         { path: '/city', component: City },
         { path: '/users', component: Users },
-        { path: '/userAdd', component: UserAdd },
         { path: '/orders', component: Orders },
-        { path: '/orderAdd', component: OrderAdd },
-        { path: '/finance', component: Finance },
-        { path: '/financeAdd', component: FinanceAdd }
+        { path: '/finance', component: Finance }
       ]
     }
   ]

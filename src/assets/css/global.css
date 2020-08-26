@@ -27,3 +27,7 @@ html, body, #app {
 .el-select {
     width: 100%;
 }
+
+.el-input {
+    width: 100%;
+}
