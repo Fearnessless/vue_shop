@@ -45,7 +45,7 @@ export default {
         // 验证密码是否合法
         password: [
           { required: true, message: '请输入用户密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度请在6到15个字符之间', trigger: 'blur' }
+          { min: 5, max: 15, message: '长度请在6到15个字符之间', trigger: 'blur' }
         ]
       }
     }
