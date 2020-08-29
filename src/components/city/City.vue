@@ -165,7 +165,7 @@ export default {
         this.citylist = res.data.cities
         this.total = res.data.total
       } else {
-        return this.$mesaage.error('获取省份列表信息失败')
+        return this.$message.error('获取省份列表信息失败')
       }
     },
     // 获取供货仓用户列表
