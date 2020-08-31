@@ -41,6 +41,11 @@
         </el-table-column>
       </el-table>
 
+      <!-- 分页区域 -->
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      :current-page="queryInfo.pageNum" :page-sizes="[8, 10, 15, 20]" :page-size="queryInfo.pageSize"
+      layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+
       <el-dialog title="添加结算记录" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
 
         <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px">
@@ -199,6 +204,16 @@ export default {
     // 监听添加城市对话框的关闭事件
     addDialogClosed () {
       this.$refs.addFormRef.resetFields()
+    },
+    // 监听 pageSize 改变的事件
+    handleSizeChange (newSize) {
+      this.queryInfo.pageSize = newSize
+      this.getCityList()
+    },
+    // 监听页码的值改变的事件
+    handleCurrentChange (newPage) {
+      this.queryInfo.pageNum = newPage
+      this.getCityList()
     },
     // 添加结算信息
     async addFinance () {

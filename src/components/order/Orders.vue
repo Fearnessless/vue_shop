@@ -166,7 +166,7 @@
                 </el-select>
               </el-col>
               <el-col :span="6">
-                <el-select v-model="editForm.user_id" @change="getUserByCity($event)" size="mini">
+                <el-select v-model="editForm.city_id" @change="getUserByCity($event)" size="mini">
                   <el-option v-for="item in citylist" :key="item.id" :value="item.user_id" :label="item.name"></el-option>
                 </el-select>
               </el-col>
@@ -353,7 +353,6 @@ export default {
     // 获取单一订单信息
     async getOrderOne (id) {
       const { data: res } = await this.$http.get('order/getOrderById?id=' + id)
-      console.log(res)
       if (res.meta.status === 200) {
         this.orderInfo = res.data
         this.editForm = res.data
