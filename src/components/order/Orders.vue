@@ -42,7 +42,7 @@
             </el-tooltip>
             <!-- 删除按钮 -->
             <el-tooltip effect="dark" content="删除" placement="top" :enterable="false">
-              <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeCityById(scope.row.id, scope.row.user.id)"></el-button>
+              <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeOrderById(scope.row.id)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -140,22 +140,22 @@
       <el-dialog title="订单修改" :visible.sync="editDialogVisible" width="50%">
 
         <!-- 内容主体区域 -->
-        <el-form :model="orderInfo" :rules="editFormRules" ref="editFormRef" label-width="100px">
+        <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="100px">
           <el-form-item label="订单号" prop="order_no">
-            <el-input v-model="orderInfo.order_no" size="mini" placeholder="请输入订单号"></el-input>
+            <el-input v-model="editForm.order_no" size="mini" placeholder="请输入订单号"></el-input>
           </el-form-item>
           <el-form-item label="收货地址" prop="snap_address">
-            <el-input v-model="orderInfo.snap_address" size="mini" placeholder="请输入收货地址"></el-input>
+            <el-input v-model="editForm.snap_address" size="mini" placeholder="请输入收货地址"></el-input>
           </el-form-item>
           <el-form-item label="收货人姓名" prop="contacts">
-            <el-input v-model="orderInfo.contacts" size="mini" placeholder="请输入收货人姓名"></el-input>
+            <el-input v-model="editForm.contacts" size="mini" placeholder="请输入收货人姓名"></el-input>
           </el-form-item>
           <el-form-item label="收货人手机" prop="phone">
-            <el-input v-model="orderInfo.phone" size="mini" placeholder="请输入收货人手机号"></el-input>
+            <el-input v-model="editForm.phone" size="mini" placeholder="请输入收货人手机号"></el-input>
           </el-form-item>
           <el-form-item label="订单状态" prop="status">
-            <el-select placeholder="请选择" v-model="editForm.status" size="mini">
-              <el-option v-for="item in status" :key="item.id" :value="item.id" :label="item.value"></el-option>
+            <el-select placeholder="请选择" v-model="editForm.status_val" size="mini">
+              <el-option v-for="item in status" :key="item.id" :value="item.id" :label="item.value" :disabled="true"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="发货人" prop="user_id">
@@ -170,8 +170,8 @@
                   <el-option v-for="item in citylist" :key="item.id" :value="item.user_id" :label="item.name"></el-option>
                 </el-select>
               </el-col>
-              <el-col :span="6"><el-input v-model="editForm.user_truename" :disabled="true" size="mini"></el-input></el-col>
-              <el-col :span="6"><el-input v-model="editForm.user_phone" :disabled="true" size="mini"></el-input></el-col>
+              <el-col :span="6"><el-input v-model="editUser.true_name" :disabled="true" size="mini"></el-input></el-col>
+              <el-col :span="6"><el-input v-model="editUser.phone" :disabled="true" size="mini"></el-input></el-col>
             </el-row>
           </el-form-item>
           <el-form-item label="订单详情" prop="snap_items">
@@ -266,16 +266,16 @@ export default {
         contacts: '',
         phone: '',
         province_id: '',
+        city_id: '',
         user_id: '',
         user_truename: '',
         user_phone: '',
         status: [{ val: '', text: '' }],
-        user: [{ true_name: '', phone: '' }],
-        send_info: '',
-        send_time: ''
+        user: [{ true_name: '', phone: '' }]
       },
-      // 查询到的订单信息对象
+      // 修改订单信息存储对象
       editForm: {},
+      editUser: {},
       // 添加城市的表单规则验证对象
       addFormRules: {
         order_no: [{ required: true, message: '请输入订单号', trigger: 'blur' }],
@@ -344,6 +344,8 @@ export default {
       if (res.meta.status === 200) {
         this.addForm.user_truename = res.data.true_name
         this.addForm.user_phone = res.data.phone
+        this.editUser.true_name = res.data.true_name
+        this.editUser.phone = res.data.phone
       } else {
         this.$message.error(res.meta.msg)
       }
@@ -351,9 +353,10 @@ export default {
     // 获取单一订单信息
     async getOrderOne (id) {
       const { data: res } = await this.$http.get('order/getOrderById?id=' + id)
-      console.log(res)
       if (res.meta.status === 200) {
-        this.orderInfo = res.data
+        this.editForm = res.data
+        this.editForm.status_val = res.data.status.val
+        this.editUser = res.data.user
       } else {
         this.$message.error(res.meta.msg)
       }
@@ -392,7 +395,6 @@ export default {
     },
     // 添加订单
     addOrder () {
-      console.log(this.addForm)
       var items = this.addForm.snap_items
       for (var i = 0; i < items.length; i++) {
         items[i].proCount = items[i].proCount - 0
@@ -428,6 +430,16 @@ export default {
     showEditDialog (id) {
       this.getOrderOne(id)
       this.editDialogVisible = true
+    },
+    // 修改订单
+    async editOrder () {
+      const { data: res } = await this.$http.post('order/editOrder', this.editForm)
+      console.log(res)
+      console.log(this.editForm)
+    },
+    // 删除订单
+    removeOrderById (id) {
+      this.$message.error('不可删除')
     }
   }
 }
