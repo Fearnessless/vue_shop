@@ -353,7 +353,9 @@ export default {
     // 获取单一订单信息
     async getOrderOne (id) {
       const { data: res } = await this.$http.get('order/getOrderById?id=' + id)
+      console.log(res)
       if (res.meta.status === 200) {
+        this.orderInfo = res.data
         this.editForm = res.data
         this.editForm.status_val = res.data.status.val
         this.editUser = res.data.user
