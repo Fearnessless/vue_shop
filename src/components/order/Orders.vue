@@ -402,8 +402,8 @@ export default {
         items[i].proPrice = items[i].proPrice - 0
         this.addForm.totalCount += items[i].proCount
         this.addForm.totalPrice += (items[i].proPrice * 100) * items[i].proCount
+        this.addForm.totalPrice /= 100
       }
-      this.addForm.totalPrice /= 100
 
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) return this.$message.error('验证信息不通过，请重新填写')
