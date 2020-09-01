@@ -434,6 +434,14 @@ export default {
     },
     // 修改订单
     async editOrder () {
+      var items = this.editForm.snap_items
+      for (var i = 0; i < items.length; i++) {
+        items[i].proCount = items[i].proCount - 0
+        items[i].proPrice = items[i].proPrice - 0
+        this.editForm.totalCount += items[i].proCount
+        this.editForm.totalPrice += (items[i].proPrice * 100) * items[i].proCount
+        this.editForm.totalPrice /= 100
+      }
       const { data: res } = await this.$http.post('order/editOrder', this.editForm)
       console.log(res)
       console.log(this.editForm)
