@@ -90,15 +90,19 @@
               <el-col :span="6"><el-input v-model="addForm.user_phone" :disabled="true" size="mini"></el-input></el-col>
             </el-row>
           </el-form-item>
-          <el-form-item label="订单详情" prop="snap_items">
-            <el-row v-for="(item, index) in addForm.snap_items" :key="index">
-              <el-col :span="16"><el-input v-model="item.proName" size="mini" placeholder="商品名称、规格等重要信息"></el-input></el-col>
-              <el-col :span="3"><el-input v-model="item.proCount" size="mini" placeholder="数量" style="margin-left: 12px"></el-input></el-col>
-              <el-col :span="3"><el-input v-model="item.proPrice" size="mini" placeholder="单价" style="margin-left: 24px"></el-input></el-col>
-              <el-button type="danger" icon="el-icon-delete" circle size="mini" style="margin-left: 36px" @click="delItemRow(index)"></el-button>
-            </el-row>
-            <el-button size="mini" type="primary" @click="addItemRow">添加</el-button>
-          </el-form-item>
+          <div v-for="(item, index) in addForm.snap_items" :key="index">
+            <el-form-item label="订单详情">
+              <el-input v-model="item.proName" size="mini" placeholder="商品名称、规格等重要信息"></el-input>
+            </el-form-item>
+            <el-form-item label="商品数量" style="display: inline-block">
+              <el-input v-model="item.proCount" size="mini" placeholder="数量"></el-input>
+            </el-form-item>
+            <el-form-item label="商品单价" style="display: inline-block">
+              <el-input v-model="item.proPrice" size="mini" placeholder="单价"></el-input>
+            </el-form-item>
+            <el-button type="danger" icon="el-icon-delete" circle size="mini" style="margin-left: 36px;" @click="delItemRow(index)"></el-button>
+          </div>
+          <el-button size="mini" type="primary" @click="addItemRow">添加</el-button>
         </el-form>
 
         <!-- 底部区域 -->
@@ -123,6 +127,7 @@
                 <el-col :span="6"><div>小计：￥{{ ((item.proPrice*100)*item.proCount)/100 }}</div></el-col>
               </el-row>
             </div>
+            <div>总计：￥{{ orderInfo.total_price }}</div>
           </el-form-item>
           <el-form-item label="收货人地址：">{{ orderInfo.snap_address }}</el-form-item>
           <el-form-item label="收货人姓名：">{{ orderInfo.contacts }}</el-form-item>
@@ -174,15 +179,19 @@
               <el-col :span="6"><el-input v-model="editUser.phone" :disabled="true" size="mini"></el-input></el-col>
             </el-row>
           </el-form-item>
-          <el-form-item label="订单详情" prop="snap_items">
-            <el-row v-for="(item, index) in editForm.snap_items" :key="index">
-              <el-col :span="16"><el-input v-model="item.proName" size="mini" placeholder="商品名称、规格等重要信息"></el-input></el-col>
-              <el-col :span="3"><el-input v-model="item.proCount" size="mini" placeholder="数量" style="margin-left: 12px"></el-input></el-col>
-              <el-col :span="3"><el-input v-model="item.proPrice" size="mini" placeholder="单价" style="margin-left: 24px"></el-input></el-col>
-              <el-button type="danger" icon="el-icon-delete" circle size="mini" style="margin-left: 36px" @click="delItemRow(index)"></el-button>
-            </el-row>
-            <el-button size="mini" type="primary" @click="addItemRow">添加</el-button>
-          </el-form-item>
+          <div v-for="(item, index) in editForm.snap_items" :key="index">
+            <el-form-item label="商品详情" prop="proName">
+              <el-input v-model="item.proName" size="mini" placeholder="商品名称、规格等重要信息"></el-input>
+            </el-form-item>
+            <el-form-item label="商品数量" prop="proCount" style="display: inline-block">
+              <el-input v-model="item.proCount" size="mini" placeholder="数量"></el-input>
+            </el-form-item>
+            <el-form-item label="商品单价" prop="proPrice" style="display: inline-block">
+              <el-input v-model="item.proPrice" size="mini" placeholder="单价"></el-input>
+            </el-form-item>
+            <el-button type="danger" icon="el-icon-delete" circle size="mini" style="margin-left: 36px;" @click="delItemRow(index)"></el-button>
+          </div>
+          <el-button size="mini" type="primary" @click="addItemRow">添加</el-button>
         </el-form>
 
         <!-- 底部区域 -->
@@ -292,7 +301,9 @@ export default {
       // 修改城市的表单规则验证对象
       editFormRules: {
         order_no: [{ required: true, message: '请输入订单号', trigger: 'blur' }],
-        snap_items: [{ required: true, message: '请输入订单详情', trigger: 'blur' }],
+        proName: [{ required: true, message: '请输入商品详细', trigger: 'blur' }],
+        proCount: [{ required: true, message: '请输入商品数量', trigger: 'blur' }],
+        proPrice: [{ required: true, message: '请输入商品单价', trigger: 'blur' }],
         snap_address: [{ required: true, message: '请输入收货地址', trigger: 'blur' }],
         contacts: [{ required: true, message: '请选择负责人', trigger: 'blur' }],
         phone: [
@@ -401,8 +412,7 @@ export default {
         items[i].proCount = items[i].proCount - 0
         items[i].proPrice = items[i].proPrice - 0
         this.addForm.totalCount += items[i].proCount
-        this.addForm.totalPrice += (items[i].proPrice * 100) * items[i].proCount
-        this.addForm.totalPrice /= 100
+        this.addForm.totalPrice += ((items[i].proPrice * 100) * items[i].proCount) / 100
       }
 
       this.$refs.addFormRef.validate(async valid => {
