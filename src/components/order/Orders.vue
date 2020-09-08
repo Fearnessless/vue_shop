@@ -385,7 +385,20 @@ export default {
     },
     // 监听添加订单对话框的关闭事件
     addDialogClosed () {
-      this.$refs.addFormRef.resetFields()
+      this.addForm = {
+        order_no: '',
+        snap_items: [{ proName: '', proCount: null, proPrice: null }],
+        totalCount: 0,
+        totalPrice: null,
+        snap_address: '',
+        contacts: '',
+        phone: '',
+        province_id: '',
+        user_id: '',
+        user_truename: '',
+        user_phone: '',
+        status: ''
+      }
     },
     // 点击添加商品详情行事件
     addItemRow () {
