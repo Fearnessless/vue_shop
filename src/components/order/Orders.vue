@@ -301,9 +301,7 @@ export default {
       // 修改城市的表单规则验证对象
       editFormRules: {
         order_no: [{ required: true, message: '请输入订单号', trigger: 'blur' }],
-        proName: [{ required: true, message: '请输入商品详细', trigger: 'blur' }],
-        proCount: [{ required: true, message: '请输入商品数量', trigger: 'blur' }],
-        proPrice: [{ required: true, message: '请输入商品单价', trigger: 'blur' }],
+        snap_items: [{ required: true, message: '请输入订单详情', trigger: 'blur' }],
         snap_address: [{ required: true, message: '请输入收货地址', trigger: 'blur' }],
         contacts: [{ required: true, message: '请选择负责人', trigger: 'blur' }],
         phone: [
