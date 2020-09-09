@@ -397,6 +397,7 @@ export default {
         user_phone: '',
         status: ''
       }
+      this.$refs.addFormRef.resetFields()
     },
     // 点击添加商品详情行事件
     addItemRow () {
@@ -456,16 +457,26 @@ export default {
     // 修改订单
     async editOrder () {
       var items = this.editForm.snap_items
+      this.editForm.total_count = 0
+      this.editForm.total_price = 0
       for (var i = 0; i < items.length; i++) {
         items[i].proCount = items[i].proCount - 0
         items[i].proPrice = items[i].proPrice - 0
-        this.editForm.totalCount += items[i].proCount
-        this.editForm.totalPrice += (items[i].proPrice * 100) * items[i].proCount
-        this.editForm.totalPrice /= 100
+        this.editForm.total_count += items[i].proCount
+        this.editForm.total_price += ((items[i].proPrice * 100) * items[i].proCount) / 100
       }
       const { data: res } = await this.$http.post('order/editOrder', this.editForm)
-      console.log(res)
-      console.log(this.editForm)
+      // console.log(res)
+      // console.log(this.editForm)
+      if (!res) {
+        this.$message.error('修改订单失败，请重试')
+      } else {
+        this.$message.success('修改订单成功')
+        // 隐藏添加的对话框
+        this.editDialogVisible = false
+        // 刷新订单列表
+        this.getOrderList()
+      }
     },
     // 删除订单
     removeOrderById (id) {

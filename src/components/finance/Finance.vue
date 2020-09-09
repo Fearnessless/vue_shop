@@ -25,9 +25,11 @@
       <!-- 财务列表区域 -->
       <el-table :data="financelist" border stripe>
         <el-table-column type="index"></el-table-column>
-        <el-table-column label="供货仓" prop="user.true_name"></el-table-column>
-        <el-table-column label="所属地区" prop="area"></el-table-column>
-        <el-table-column label="销售额" prop="sell_out"></el-table-column>
+        <el-table-column label="销售金额" prop="sell_out"></el-table-column>
+        <el-table-column label="货物成本" prop="principal"></el-table-column>
+        <el-table-column label="平台扣点" prop="cut"></el-table-column>
+        <el-table-column label="退单损失" prop="loss"></el-table-column>
+        <el-table-column label="刷单成本" prop="invest"></el-table-column>
         <el-table-column label="分成" prop="share"></el-table-column>
         <el-table-column label="结算时间" prop="settle_time"></el-table-column>
         <el-table-column label="创建时间" prop="create_time"></el-table-column>
@@ -49,27 +51,20 @@
       <el-dialog title="添加结算记录" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
 
         <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px">
-          <el-form-item label="供货仓" prop="user_id">
-            <el-row>
-              <el-col :span="6">
-                <el-select v-model="addForm.province_id" @change="getCityList($event)">
-                  <el-option v-for="item in provincelist" :key="item.id" :value="item.id" :label="item.name"></el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="6">
-                <el-select v-model="addForm.user_id" @change="getUserByCity($event)">
-                  <el-option v-for="item in citylist" :key="item.id" :value="item.user_id" :label="item.name"></el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="6"><el-input v-model="addForm.user_truename" :disabled="true"></el-input></el-col>
-              <el-col :span="6"><el-input v-model="addForm.user_phone" :disabled="true"></el-input></el-col>
-            </el-row>
+          <el-form-item label="销售金额" prop="sell_out">
+            <el-input v-model="addForm.sell_out" type="number"></el-input>
           </el-form-item>
-          <el-form-item label="销售额" prop="sell_out">
-            <el-input v-model="addForm.sell_out"></el-input>
+          <el-form-item label="货物成本" prop="principal">
+            <el-input v-model="addForm.principal" type="number"></el-input>
           </el-form-item>
-          <el-form-item label="分成金额" prop="share">
-            <el-input v-model="addForm.share"></el-input>
+          <el-form-item label="平台抽点"  prop="cut">
+            <el-input v-model="addForm.cut" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="退单损失"  prop="loss">
+            <el-input v-model="addForm.loss" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="刷单成本"  prop="invest">
+            <el-input v-model="addForm.invest" type="number"></el-input>
           </el-form-item>
           <el-form-item label="结算时间" prop="settle_time">
             <div class="block">
@@ -105,7 +100,7 @@ export default {
       // 财务结算信息存储对象
       financelist: [],
       // 数据总条数
-      total: '',
+      total: 0,
       // 省份信息存储列表
       provincelist: [],
       // 城市信息存储列表
@@ -114,20 +109,20 @@ export default {
       addDialogVisible: false,
       // 添加结算记录的表单数据
       addForm: {
-        province_id: null,
-        city_id: null,
-        user_id: null,
-        sell_out: '',
-        share: '',
-        settle_time: '',
-        user_truename: '',
-        user_phone: ''
+        sell_out: null,
+        principal: null,
+        cut: null,
+        loss: null,
+        invest: null,
+        settle_time: null
       },
       // 添加结算记录的表单规则验证对象
       addFormRules: {
-        user_id: [{ required: true, message: '请选择供货仓', trigger: 'blur' }],
-        sell_out: [{ required: true, message: '请输入销售额', trigger: 'blur' }],
-        share: [{ required: true, message: '请输入分成金额', trigger: 'blur' }],
+        sell_out: [{ required: true, message: '请输入销售金额', trigger: 'blur' }],
+        principal: [{ required: true, message: '请输入货物成本', trigger: 'blur' }],
+        cut: [{ required: true, message: '请输入平台扣点', trigger: 'blur' }],
+        loss: [{ required: true, message: '请输入退单损失', trigger: 'blur' }],
+        invest: [{ required: true, message: '请输入刷单成本', trigger: 'blur' }],
         settle_time: [{ required: true, message: '请选择结算日期', trigger: 'blur' }]
       },
       // 设定时间
@@ -160,7 +155,6 @@ export default {
   },
   created () {
     this.getFinanceList()
-    this.getProvinceList()
   },
   methods: {
     // 初始化财务结算列表
@@ -171,34 +165,6 @@ export default {
         this.total = res.data.total
       } else {
         this.$message.error('获取列表失败')
-      }
-    },
-    // 获取省份列表
-    async getProvinceList () {
-      const { data: res } = await this.$http.get('city/getCity')
-      if (res.status) {
-        this.provincelist = res.data
-      } else {
-        return this.$mesaage.error('获取省份列表信息失败')
-      }
-    },
-    // 获取对应城市列表
-    async getCityList (province) {
-      const { data: res } = await this.$http.get('country/getCityByProvince?province=' + province)
-      if (res.meta.status === 200) {
-        this.citylist = res.data
-      } else {
-        return this.$message.error('获取城市列表信息失败')
-      }
-    },
-    // 获取城市负责人信息
-    async getUserByCity (id) {
-      const { data: res } = await this.$http.get('user/getUserByCity?user_id=' + id)
-      if (res.meta.status === 200) {
-        this.addForm.user_truename = res.data.true_name
-        this.addForm.user_phone = res.data.phone
-      } else {
-        this.$message.error(res.meta.msg)
       }
     },
     // 监听添加城市对话框的关闭事件
@@ -218,6 +184,12 @@ export default {
     // 添加结算信息
     async addFinance () {
       this.addForm.settle_time += ''
+      this.addForm.cut = parseFloat(this.addForm.cut)
+      this.addForm.loss = parseFloat(this.addForm.loss)
+      this.addForm.invest = parseFloat(this.addForm.invest)
+      this.addForm.sell_out = parseFloat(this.addForm.sell_out)
+      this.addForm.principal = parseFloat(this.addForm.principal)
+      console.log(this.addForm)
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) return this.$message.error('验证信息不通过，请重新填写')
         // 发起添加请求
