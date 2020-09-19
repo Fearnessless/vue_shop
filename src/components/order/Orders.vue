@@ -29,6 +29,7 @@
         <el-table-column label="订单状态" prop="status.text"></el-table-column>
         <el-table-column label="发货人" prop="user.true_name"></el-table-column>
         <el-table-column label="发货人手机号" prop="user.phone"></el-table-column>
+        <el-table-column label="发货信息" prop="send_info"></el-table-column>
         <el-table-column label="创建时间" prop="create_time"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
