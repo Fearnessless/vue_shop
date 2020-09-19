@@ -102,17 +102,6 @@
 <script>
 export default {
   data () {
-    // 自定义验证规则
-    var checkPhone = (rule, value, cb) => {
-      // 验证手机号的正则表达式
-      const regPhone = /^(0|86|17951)?(13[0-9]|15[0123456789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
-
-      if (regPhone.test(value)) {
-        return cb()
-      } else {
-        cb(new Error('请输入合法的手机号'))
-      }
-    }
     return {
       // 获取供货仓用户列表的参数对象
       queryInfo: {
@@ -143,16 +132,14 @@ export default {
           { required: true, message: '请输入供货仓管理人姓名', trigger: 'blur' }
         ],
         username: [
-          { required: true, message: '请输入供货仓管理人账号', trigger: 'blur' },
-          { validator: checkPhone, trigger: 'blur' }
+          { required: true, message: '请输入供货仓管理人账号', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入供货仓管理人密码', trigger: 'blur' },
           { min: 3, max: 15, message: '密码应为3~15个字符之间', trigger: 'blur' }
         ],
         phone: [
-          { required: true, message: '请输入供货仓管理人手机号', trigger: 'blur' },
-          { validator: checkPhone, trigger: 'blur' }
+          { required: true, message: '请输入供货仓管理人手机号', trigger: 'blur' }
         ]
       },
       // 修改供货仓的表单规则验证对象
@@ -161,16 +148,14 @@ export default {
           { required: true, message: '请输入供货仓管理人姓名', trigger: 'blur' }
         ],
         username: [
-          { required: true, message: '请输入供货仓管理人账号', trigger: 'blur' },
-          { validator: checkPhone, trigger: 'blur' }
+          { required: true, message: '请输入供货仓管理人账号', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入供货仓管理人密码', trigger: 'blur' },
           { min: 3, max: 15, message: '密码应为3~15个字符之间', trigger: 'blur' }
         ],
         phone: [
-          { required: true, message: '请输入供货仓管理人手机号', trigger: 'blur' },
-          { validator: checkPhone, trigger: 'blur' }
+          { required: true, message: '请输入供货仓管理人手机号', trigger: 'blur' }
         ]
       }
     }

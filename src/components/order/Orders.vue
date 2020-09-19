@@ -210,17 +210,6 @@
 <script>
 export default {
   data () {
-    // 自定义验证规则
-    var checkPhone = (rule, value, cb) => {
-      // 验证手机号的正则表达式
-      const regPhone = /^(0|86|17951)?(13[0-9]|15[0123456789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
-
-      if (regPhone.test(value)) {
-        return cb()
-      } else {
-        cb(new Error('请输入合法的手机号'))
-      }
-    }
     return {
       // 获取订单信息列表的参数对象
       queryInfo: {
@@ -292,8 +281,7 @@ export default {
         snap_address: [{ required: true, message: '请输入收货地址', trigger: 'blur' }],
         contacts: [{ required: true, message: '请选择负责人', trigger: 'blur' }],
         phone: [
-          { required: true, message: '请输入收货人手机号', trigger: 'blur' },
-          { validator: checkPhone, trigger: 'blur' }
+          { required: true, message: '请输入收货人手机号', trigger: 'blur' }
         ],
         status: [{ required: true, message: '请选择订单状态', trigger: 'blur' }],
         user_id: [{ required: true, message: '请选择发货人', trigger: 'blur' }]
@@ -305,8 +293,7 @@ export default {
         snap_address: [{ required: true, message: '请输入收货地址', trigger: 'blur' }],
         contacts: [{ required: true, message: '请选择负责人', trigger: 'blur' }],
         phone: [
-          { required: true, message: '请输入收货人手机号', trigger: 'blur' },
-          { validator: checkPhone, trigger: 'blur' }
+          { required: true, message: '请输入收货人手机号', trigger: 'blur' }
         ],
         status: [{ required: true, message: '请选择订单状态', trigger: 'blur' }],
         user_id: [{ required: true, message: '请选择发货人', trigger: 'blur' }]
